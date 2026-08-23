@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>KnowledgeExtraction.AI 商業簡報 — 對外銷售版</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  /* 色票取自系統登入頁 src/KnowledgeExtraction/KnowledgeExtraction.Web/Components/Auths/Login.razor.css */
+  :root {
+    --bg-1: #04120b; --bg-2: #06180f; --bg-3: #072418; --bg-4: #0a3322;
+    --fx-line: rgba(52,211,153,.14);
+    --surface: rgba(6,24,15,.55);
+    --border: rgba(52,211,153,.28);
+    --on-dark: #eafff5;
+    --on-dark-muted: rgba(180,240,214,.72);
+    --shadow: 0 30px 90px rgba(0,0,0,.55);
+    --mono: 'Cascadia Code','JetBrains Mono',Consolas,'Courier New',monospace;
+    --ink: #122a20; --ink-muted: #4b6b5f;
+    --rule: #dbeee5; --zebra: #f2faf6; --quote-bg: rgba(16,185,129,.06);
+  }
+  html, body { height: 100%; background: var(--bg-1); }
+  body {
+    font-family: "Microsoft JhengHei", "Noto Sans CJK TC", "PingFang TC", sans-serif;
+    overflow: hidden;
+  }
+  .slide {
+    display: none;
+    position: absolute; inset: 0;
+    background: #ffffff; color: var(--ink);
+    padding: 4.5vh 8vw;
+    flex-direction: column; justify-content: flex-start;
+  }
+  .slide.active { display: flex; }
+  /* 等寬字 kicker：對應登入頁 .login-header-kicker */
+  .slide::before {
+    content: attr(data-kicker);
+    font-family: var(--mono); font-size: .95vw;
+    letter-spacing: .22em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 1.6vh;
+    position: relative; z-index: 1;
+  }
+  /* 深色章節頁：對應登入頁 .login-container */
+  .slide.lead {
+    justify-content: center; align-items: center; text-align: center;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(52,211,153,.16), transparent 42%),
+      radial-gradient(circle at 85% 80%, rgba(34,211,238,.12), transparent 40%),
+      linear-gradient(135deg, var(--bg-1), var(--bg-2), var(--bg-3), var(--bg-4));
+    color: var(--on-dark);
+  }
+  .slide.lead::before { text-shadow: 0 0 12px rgba(52,211,153,.5); }
+  /* 網格線 + 掃描線疊層：對應登入頁 .login-grid / .login-scanlines */
+  .slide.lead::after {
+    content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(0,0,0,.16) 0 1px, transparent 1px 3px),
+      linear-gradient(var(--fx-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--fx-line) 1px, transparent 1px);
+    background-size: auto, 68px 68px, 68px 68px;
+  }
+  /* 玻璃卡片：對應登入頁 .login-card */
+  .lead-inner {
+    position: relative; z-index: 1; max-width: 80%;
+    background: var(--surface); backdrop-filter: blur(22px);
+    border: 1px solid var(--border); border-radius: 28px;
+    box-shadow: var(--shadow), inset 0 1px 0 rgba(110,231,183,.12);
+    padding: 5vh 4vw;
+  }
+  .lead-inner::before {
+    content: ""; display: block; width: 90px; height: 8px; border-radius: 4px;
+    background: var(--accent); margin: 0 auto 3vh;
+    box-shadow: 0 0 18px var(--accent);
+  }
+  h1 {
+    font-size: 5.2vw; color: var(--on-dark); line-height: 1.15; margin-bottom: 2vh;
+    text-shadow: 0 0 24px rgba(52,211,153,.35);
+  }
+  h2.title {
+    font-size: 3.0vw; color: var(--ink); padding-bottom: 1.4vh;
+    border-bottom: 6px solid var(--accent); display: inline-block; margin-bottom: 3vh;
+  }
+  .slide.lead h2 { font-size: 2.6vw; color: var(--on-dark-muted); font-weight: 600; margin-bottom: 2vh; }
+  h3 { font-size: 1.9vw; color: var(--accent); margin: 2vh 0 1vh; }
+  p { font-size: 1.8vw; line-height: 1.6; margin: 1vh 0; color: var(--ink); }
+  .slide.lead p { font-size: 2.1vw; color: var(--on-dark-muted); }
+  ul { list-style: none; margin: 1vh 0; }
+  li { font-size: 1.85vw; line-height: 1.7; padding-left: 1.6em; position: relative; }
+  li::before {
+    content: "●"; color: var(--accent); position: absolute; left: 0; font-size: 0.9em; top: 0.15em;
+  }
+  blockquote {
+    font-size: 1.5vw; color: var(--ink-muted); font-style: italic;
+    border-left: 5px solid var(--accent); padding: 1.2vh 1.4vw; margin-top: 3vh;
+    background: var(--quote-bg); border-radius: 0 14px 14px 0;
+    box-shadow: 0 8px 24px rgba(16,185,129,.10);
+  }
+  table {
+    border-collapse: separate; border-spacing: 0; width: 100%; margin: 2vh 0; font-size: 1.4vw;
+    border-top: 3px solid #34d399; border-radius: 16px; overflow: hidden;
+    box-shadow: 0 10px 30px rgba(10,51,34,.08);
+  }
+  th { background: var(--bg-4); color: var(--on-dark); padding: 0.9vh 1vw; text-align: left; }
+  td { padding: 0.8vh 1vw; border-bottom: 1px solid var(--rule); }
+  tr:nth-child(even) td { background: var(--zebra); }
+  .hud {
+    position: fixed; bottom: 2.2vh; right: 3vw; z-index: 10;
+    font-size: 1.1vw; color: #4f8f77; font-family: var(--mono);
+  }
+  .progress {
+    position: fixed; top: 0; left: 0; height: 5px; background: var(--bar, #10b981);
+    transition: width .25s ease; z-index: 10;
+    filter: drop-shadow(0 0 6px rgba(52,211,153,.6));
+  }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<section class="slide lead" style="--accent:#34d399" data-kicker="THE HIDDEN COST">
+<div class="lead-inner">
+<h1>你的公司，每天都在「重複付錢」找同一份資料</h1>
+<p>員工平均每天約 1.8 小時，花在找資料、問人、等回覆</p>
+</div>
+</section>
+<section class="slide lead" style="--accent:#6ee7b7" data-kicker="50+ WORKING DAYS">
+<div class="lead-inner">
+<h1>一年，超過 50 個工作天</h1>
+<p>這是一個人一年蒸發掉的時間</p>
+<p>再乘上您公司的人數</p>
+</div>
+</section>
+<section class="slide lead" style="--accent:#2dd4bf" data-kicker="ONE QUESTION 30 SECONDS">
+<div class="lead-inner">
+<h1>1 句話，30 秒</h1>
+<p>把那 1.8 小時，換成一個<strong>帶出處</strong>的答案</p>
+<p>資料留在公司、權限可控、全程可稽核</p>
+</div>
+</section>
+<section class="slide lead" style="--accent:#5eead4" data-kicker="KNOWLEDGE EXTRACTION AI">
+<div class="lead-inner">
+<h1>KnowledgeExtraction.AI（智庫引擎）</h1>
+<h2>把企業的資訊，變成找得到、用得上的知識</h2>
+<p>企業知識庫解決方案　|　對外簡報　|　對應系統版本 1.1.0（2026/08/22）</p>
+</div>
+</section>
+<section class="slide" style="--accent:#0e7490" data-kicker="PAIN POINTS">
+<h2 class='title'>您是否也遇到這些狀況？</h2>
+<ul>
+<li>想找一份過去的資料，只能翻檔案、問同事</li>
+<li>不確定哪一份才是最新版，結果做了重工</li>
+<li>會議開了很多，結論與待辦沒人記得</li>
+<li>老手的經驗只在他腦中，一離職就斷層</li>
+<li>想用 AI，卻不敢把公司資料交出去</li>
+<li>整理過一次沒人維護，很快又過時</li>
+</ul>
+</section>
+<section class="slide" style="--accent:#155e75" data-kicker="COST OF INACTION">
+<h2 class='title'>這些痛點，其實每天都在花錢</h2>
+<ul>
+<li><strong>時間</strong>：每人每天 1–2 小時找資料、等回覆</li>
+<li><strong>重工</strong>：用到舊版本，重做、做錯、來回確認</li>
+<li><strong>決策慢</strong>：要等「問到對的人」才敢拍板</li>
+<li><strong>知識流失</strong>：人一走，關鍵經驗跟著走</li>
+<li><strong>合規風險</strong>：資料散落、無稽核，稽查時交不出東西</li>
+</ul>
+<blockquote>這些代價每天都在發生，只是從來沒被算進帳。</blockquote>
+</section>
+<section class="slide lead" style="--accent:#10b981" data-kicker="TRUST NOT VOLUME">
+<div class="lead-inner">
+<h1>問題不是「沒有資料」</h1>
+<h2>是資料找得到，卻不敢信</h2>
+</div>
+</section>
+<section class="slide" style="--accent:#047857" data-kicker="KNOWLEDGE PIPELINE">
+<h2 class='title'>解決方案：一站式知識閉環</h2>
+<p><strong>資料匯入 → 資料清洗 → 知識頁審核 → 建立知識庫 → 智慧應用</strong></p>
+<ul>
+<li>一條龍走完，不是拼裝五套工具</li>
+<li>每一關都留人工審核，AI 不會自己說了算</li>
+<li>內容一變更就自動重新索引，不會整理完就過時</li>
+</ul>
+<blockquote>別人給您一個聊天框，我們給您一條產線。</blockquote>
+</section>
+<section class="slide" style="--accent:#065f46" data-kicker="DATA INGESTION">
+<h2 class='title'>資料進得來，才有知識庫</h2>
+<h3>文件</h3>
+<p>PDF、Word、PowerPoint、Excel，可用 ZIP 批次匯入</p>
+<h3>影音</h3>
+<p>音訊、影片，含 YouTube／抖音連結，自動轉繁體逐字稿</p>
+<h3>圖片</h3>
+<p>圖片內容由 AI 解讀成文字</p>
+<blockquote>散在各處的舊資料，不必先整理好才敢開始。</blockquote>
+</section>
+<section class="slide" style="--accent:#0f766e" data-kicker="DATA CLEANSING">
+<h2 class='title'>清洗：5 步把關</h2>
+<ul>
+<li>1. <strong>去重</strong>：同樣的內容不重複進庫</li>
+<li>2. <strong>個資遮罩</strong>：敏感資訊先去識別化</li>
+<li>3. <strong>分類標籤</strong>：自動歸位到分類與團隊</li>
+<li>4. <strong>自動摘要</strong>：長文變成可讀的重點</li>
+<li>5. <strong>信心自評</strong>：AI 自己標示這份做得好不好</li>
+</ul>
+<blockquote>信心不足的一律轉人工審核，不會偷偷進庫。</blockquote>
+</section>
+<section class="slide lead" style="--accent:#5eead4" data-kicker="ASK AND ANSWER">
+<div class="lead-inner">
+<h1>問一句，30 秒</h1>
+<h2>AI 企業知識助理</h2>
+</div>
+</section>
+<section class="slide" style="--accent:#0e7490" data-kicker="AI KNOWLEDGE ASSISTANT">
+<h2 class='title'>旗艦：AI 企業知識助理</h2>
+<ul>
+<li>用自然語言問，不必先想關鍵字</li>
+<li>每個答案<strong>標示來源</strong>，點得進去看原文</li>
+<li>只回答<strong>您有權限看到</strong>的內容</li>
+<li>越權內容在檢索階段就先擋掉，不外洩</li>
+</ul>
+<blockquote>過去問同事、翻檔案要半天；現在問助理，30 秒得到帶出處的答案。</blockquote>
+</section>
+<section class="slide" style="--accent:#155e75" data-kicker="BEYOND CHAT">
+<h2 class='title'>不只是問答</h2>
+<ul>
+<li><strong>知識百科</strong>：蒸餾成互相連結的 Wiki，可點擊導覽</li>
+<li><strong>版本與時效</strong>：看得到版本號，舊版標示「已被取代」</li>
+<li><strong>新人上手</strong>：不必一直打擾老手</li>
+<li><strong>回答一致</strong>：SOP 與客服說法不因人而異</li>
+<li><strong>知識傳承</strong>：老手的答案留在系統，不隨人走</li>
+</ul>
+</section>
+<section class="slide lead" style="--accent:#10b981" data-kicker="THE REAL RISK">
+<div class="lead-inner">
+<h1>企業最怕的，不是 AI 不會答</h1>
+<h2>是它一本正經地亂答</h2>
+</div>
+</section>
+<section class="slide" style="--accent:#047857" data-kicker="HONEST UNCERTAINTY">
+<h2 class='title'>寧可說「我不確定」</h2>
+<ul>
+<li><strong>查無依據就直說</strong>：分數低於門檻，程式直接回覆、不問 AI</li>
+<li><strong>信心不足會標示</strong>：中間帶的答案自動加註提醒</li>
+<li><strong>不靠 AI 自律</strong>：這兩段話由程式固定，不是叫模型乖乖聽話</li>
+<li><strong>每句話都有出處</strong>：追得到是哪一份素材</li>
+<li><strong>版本溯源</strong>：顯示素材版本號，被取代的會標記</li>
+</ul>
+<blockquote>敢說不知道的 AI，才敢讓它面對客戶。</blockquote>
+</section>
+<section class="slide" style="--accent:#065f46" data-kicker="QUALITY GATE">
+<h2 class='title'>壞資料，進不了門</h2>
+<ul>
+<li><strong>截斷偵測</strong>：清洗與蒸餾被模型截斷，系統會抓出來</li>
+<li><strong>事前警告</strong>：素材太大，動工前就先示警</li>
+<li><strong>回溯偵測</strong>：自動找出過去可能已被靜默截斷的舊資料</li>
+<li><strong>遮罩失敗即整筆重跑</strong>：未去敏的內容絕不進索引</li>
+<li><strong>分盒與規模上限</strong>：一次吃得下的量，才吃</li>
+</ul>
+<blockquote>知識庫的品質，是在入口守出來的，不是事後補。</blockquote>
+</section>
+<section class="slide" style="--accent:#0f766e" data-kicker="ACCEPTANCE CRITERIA">
+<h2 class='title'>品質不是形容詞，是驗收標準</h2>
+<table>
+<tr><th>品質關卡</th><th>驗收標準</th></tr>
+<tr><td>越權外洩</td><td><strong>0 件</strong>，檢索品質評測的硬性驗收條件</td></tr>
+<tr><td>個資遮罩</td><td>遮罩失敗即整筆重跑，未去敏內容不進索引</td></tr>
+<tr><td>低信心回答</td><td>低於門檻直接回「查無依據」，不呼叫 AI</td></tr>
+<tr><td>答案出處</td><td>每個出處可追到素材與版本</td></tr>
+<tr><td>檢索品質</td><td>命中率、零命中比例、分數分布，逐版回歸</td></tr>
+<tr><td>清洗品質</td><td>去重、遮罩、分類、摘要各有評測分數</td></tr>
+</table>
+<blockquote>數字不好看就不放行。這是我們的驗收標準，也可以是您的。</blockquote>
+</section>
+<section class="slide" style="--accent:#115e59" data-kicker="ENTERPRISE SECURITY">
+<h2 class='title'>企業級資安，不是事後補</h2>
+<ul>
+<li><strong>權控</strong>：延續團隊權限，在<strong>檢索層</strong>就過濾</li>
+<li><strong>遮罩</strong>：敏感與個資自動遮罩，失敗即整筆重跑</li>
+<li><strong>稽核</strong>：誰、何時、問了什麼、看了哪些來源，可匯出 PDF</li>
+<li><strong>一致</strong>：外部 AI 助理來問，套的是同一份權控與稽核</li>
+</ul>
+<blockquote>面對合規與資安要求，從第一天就內建。</blockquote>
+</section>
+<section class="slide lead" style="--accent:#22d3ee" data-kicker="SPEND YOU CAN READ">
+<div class="lead-inner">
+<h1>AI 的錢，不該是一筆看不懂的帳</h1>
+<p>花在哪、誰在用、值不值得續約</p>
+<p>全部看得到，不是黑盒子</p>
+</div>
+</section>
+<section class="slide" style="--accent:#155e75" data-kicker="EXECUTIVE REPORTS">
+<h2 class='title'>經營看得見：五張報表</h2>
+<ul>
+<li><strong>Token 用量統計</strong>：錢花在哪，可拆四個維度</li>
+<li><strong>AI 回答滿意度</strong>：使用者按了幾個讚、幾個不滿意</li>
+<li><strong>問答使用統計</strong>：誰在用、問什麼、頻不頻繁</li>
+<li><strong>檢索品質統計</strong>：找得到嗎？命中率與零命中比例</li>
+<li><strong>內容清點統計</strong>：知識庫長多大、卡在哪一關</li>
+</ul>
+<blockquote>全部可下載 PDF；首頁「經營洞察」與使用趨勢圖，一眼看完。</blockquote>
+</section>
+<section class="slide" style="--accent:#046b4d" data-kicker="SYSTEM OBSERVABILITY">
+<h2 class='title'>系統的狀況，也不是黑盒子</h2>
+<ul>
+<li><strong>24 項健康檢查</strong>：實際呼叫驗證 AI 模型真的可用</li>
+<li><strong>系統例外紀錄</strong>：誰、在哪一頁、按了哪顆鈕出錯</li>
+<li><strong>待處理背景工作</strong>：積壓多少、卡在哪一條管線</li>
+<li><strong>資料表使用狀況</strong>：資料長多快、該不該清，有依據</li>
+<li><strong>日誌 AI 分析</strong>：讓 AI 先讀日誌，整理成看得懂的結論</li>
+</ul>
+<blockquote>出問題時不必猜，續約時不必吵。</blockquote>
+</section>
+<section class="slide lead" style="--accent:#34d399" data-kicker="NO VANITY METRICS">
+<div class="lead-inner">
+<h1>我們不賣百分比</h1>
+<h2>我們給您一把可以自己量的尺</h2>
+</div>
+</section>
+<section class="slide" style="--accent:#065f46" data-kicker="MEASUREMENT METHOD">
+<h2 class='title'>效益怎麼量：導入前後，各量一次</h2>
+<table>
+<tr><th>想證明的事</th><th>系統內建的量尺</th></tr>
+<tr><td>查找變快了</td><td>問答使用統計：問答量與追問次數</td></tr>
+<tr><td>答得準不準</td><td>AI 回答滿意度：滿意／不滿意趨勢</td></tr>
+<tr><td>找不找得到</td><td>檢索品質統計：命中率、零命中比例</td></tr>
+<tr><td>AI 花多少錢</td><td>Token 用量統計：可拆到人／作業／模型</td></tr>
+<tr><td>知識累積多少</td><td>內容清點統計：素材與知識頁狀態分佈</td></tr>
+</table>
+<blockquote>先選一個高頻情境試點，用同一把尺量兩次，數字自己會說話。</blockquote>
+</section>
+<section class="slide" style="--accent:#0f766e" data-kicker="COMPETITIVE LANDSCAPE">
+<h2 class='title'>與市售方案的比較</h2>
+<table>
+<tr><th>能力</th><th>本系統</th><th>M365 Copilot</th><th>NotebookLM</th><th>ChatGPT Ent.</th><th>Glean</th></tr>
+<tr><td>真・地端/離線部署</td><td>✅</td><td>✗</td><td>✗</td><td>✗</td><td>△*</td></tr>
+<tr><td>跨來源匯入(影音/文件)</td><td>✅</td><td>△</td><td>✅</td><td>△</td><td>✅</td></tr>
+<tr><td>細緻權控(團隊層・檢索層過濾)</td><td>✅</td><td>△</td><td>✗</td><td>△</td><td>✅</td></tr>
+<tr><td>敏感資訊遮罩</td><td>✅</td><td>△</td><td>✗</td><td>△</td><td>△</td></tr>
+<tr><td>存取稽核</td><td>✅</td><td>△</td><td>✗</td><td>△</td><td>✅</td></tr>
+<tr><td>完整閉環(清洗+蒸餾+知識庫+應用)</td><td>✅</td><td>✗</td><td>✗</td><td>✗</td><td>△</td></tr>
+</table>
+<blockquote>✅完整支援　△部分/受限　✗通常不支援。<strong>*Glean 為「自架於客戶自有雲/VPC」，非真・地端離線</strong>。以各產品 2026/07 公開資料整理（廠商自述、單一來源），實際以最新版本為主。</blockquote>
+</section>
+<section class="slide" style="--accent:#115e59" data-kicker="PLATFORM VS CHATBOX">
+<h2 class='title'>與「只給一個聊天框」的差別</h2>
+<table>
+<tr><th></th><th>一般 AI 聊天</th><th>KnowledgeExtraction.AI</th></tr>
+<tr><td>資料</td><td>必須上雲</td><td>可地端私有</td></tr>
+<tr><td>權控</td><td>弱／無</td><td>團隊層，檢索層即過濾</td></tr>
+<tr><td>出處</td><td>常常沒有</td><td>每個答案帶出處可追溯</td></tr>
+<tr><td>答不出來時</td><td>硬掰</td><td>直接說「查無依據」</td></tr>
+<tr><td>成本</td><td>看不到明細</td><td>四維度用量報表可下載</td></tr>
+<tr><td>範圍</td><td>單點工具</td><td>匯入→清洗→知識庫→應用 完整閉環</td></tr>
+</table>
+</section>
+<section class="slide" style="--accent:#0e7490" data-kicker="DEPLOYMENT OPTIONS">
+<h2 class='title'>地端／雲端，您決定</h2>
+<table>
+<tr><th>模式</th><th>適合</th><th>重點</th></tr>
+<tr><td>地端／私有部署</td><td>受管制產業、資料不可外流</td><td>資料完全不出企業環境</td></tr>
+<tr><td>雲端</td><td>求快、求功能</td><td>上手快、免維運</td></tr>
+<tr><td>混搭</td><td>想兼顧成本與機密</td><td>生成與嵌入模型可各自選</td></tr>
+</table>
+<blockquote>支援 Azure OpenAI、OpenAI 官方，以及 OpenAI 相容的<strong>地端私有模型</strong>；資料庫 SQL Server 與 SQLite 雙軌。</blockquote>
+</section>
+<section class="slide lead" style="--accent:#67e8f9" data-kicker="THIRTY INDUSTRIES">
+<div class="lead-inner">
+<h1>30 種產業，我們都寫過劇本</h1>
+<p>不是換個 logo 的通用簡報</p>
+<p>請在下一頁找找看，有沒有您這一行</p>
+</div>
+</section>
+<section class="slide" style="--accent:#046b4d" data-kicker="INDUSTRY PLAYBOOKS">
+<h2 class='title'>已備妥應用劇本的 30 種產業</h2>
+<table>
+<tr><th>類別</th><th>產業</th></tr>
+<tr><td>製造與加工</td><td>精密機械、電子代工、化工塗料、食品加工、紡織染整、模具製造、半導體設備、金屬加工</td></tr>
+<tr><td>工程與營建</td><td>營建土木、機電空調、建築與室內設計</td></tr>
+<tr><td>醫療與照護</td><td>醫院診所、長照機構、製藥與醫療器材</td></tr>
+<tr><td>專業服務</td><td>會計師、律師、管理顧問、人資派遣、廣告行銷</td></tr>
+<tr><td>科技與金融</td><td>系統整合、軟體 SaaS、資訊委外 MSP、銀行、保險經紀、證券投顧</td></tr>
+<tr><td>民生與公共</td><td>連鎖餐飲、零售電商、物流倉儲、旅宿飯店、公部門</td></tr>
+</table>
+<blockquote>每一種都有專屬的痛點盤點、資料來源清單與試點建議。</blockquote>
+</section>
+<section class="slide" style="--accent:#047857" data-kicker="COMMON STARTING POINTS">
+<h2 class='title'>最常從這裡開始</h2>
+<ul>
+<li>會議知識留存與追蹤</li>
+<li>SOP 與作業規範查詢</li>
+<li>客服與售後問答</li>
+<li>專案交接與進度助理</li>
+<li>老師傅經驗傳承</li>
+<li>法規、合約與稽核查詢</li>
+</ul>
+<blockquote>不必一次全上。挑一個問最多次的情境，先做那一個。</blockquote>
+</section>
+<section class="slide lead" style="--accent:#6ee7b7" data-kicker="EASIER THAN EXPECTED">
+<div class="lead-inner">
+<h1>導入，沒有想像中難</h1>
+<h2>8 到 13 週，從試點到上線</h2>
+<p>立基成熟平台（.NET 10 / Blazor），分階段導入，先試點再擴大</p>
+</div>
+</section>
+<section class="slide" style="--accent:#0f766e" data-kicker="ROLLOUT ROADMAP">
+<h2 class='title'>導入流程：六個階段</h2>
+<table>
+<tr><th>階段</th><th>主要工作</th><th>預估時間</th></tr>
+<tr><td>1 評估與訪談</td><td>確認試點情境、資料來源、資安/合規需求</td><td>1–2 週</td></tr>
+<tr><td>2 環境準備與部署</td><td>建置環境、安裝系統、DB 與 LLM 設定、帳號權限</td><td>1–2 週</td></tr>
+<tr><td>3 資料匯入與清洗</td><td>匯入試點資料、清洗＋蒸餾、分類標籤、遮罩規則</td><td>1–2 週</td></tr>
+<tr><td>4 知識庫建立與調校</td><td>切塊／索引、混合檢索調校、權控測試</td><td>2–3 週</td></tr>
+<tr><td>5 試點驗證(UAT)</td><td>助理上線給試點使用者、收回饋、量測效益</td><td>2–3 週</td></tr>
+<tr><td>6 正式上線與訓練</td><td>全量資料、教育訓練、營運與稽核交接</td><td>1 週</td></tr>
+</table>
+<blockquote>試點到上線約 <strong>8–13 週</strong>（中型規模示意，依資料量與環境調整）。</blockquote>
+</section>
+<section class="slide" style="--accent:#115e59" data-kicker="WHAT WE NEED FROM YOU">
+<h2 class='title'>您要準備與配合什麼</h2>
+<ul>
+<li>指定<strong>專案窗口</strong>與試點使用者</li>
+<li>提供試點<strong>資料來源</strong>與存取權限</li>
+<li>確認資安、合規需求與<strong>遮罩規則</strong></li>
+<li>環境資源：地端伺服器算力，或雲端租戶</li>
+<li>確認<strong>分類、團隊與權限對照</strong></li>
+<li>提供<strong>測試問題集</strong>、參與 UAT 回饋</li>
+</ul>
+<blockquote>配合愈到位，導入愈快。</blockquote>
+</section>
+<section class="slide" style="--accent:#0e7490" data-kicker="CONTINUOUS ITERATION">
+<h2 class='title'>上線後：每 2 週一個迭代週期</h2>
+<ul>
+<li>收集使用回饋與查詢日誌</li>
+<li>調校檢索與遮罩、補強知識</li>
+<li>擴充資料來源、新增應用場景</li>
+<li>知識健檢維護，知識不過時</li>
+<li>每週期<strong>驗收一次</strong>，滾動優化</li>
+</ul>
+<blockquote>知識庫會愈用愈準，價值持續複利。</blockquote>
+</section>
+<section class="slide lead" style="--accent:#67e8f9" data-kicker="ONE MORE THING">
+<div class="lead-inner">
+<h1>還有一件事</h1>
+<p>您自己的 AI 助理，也能安全查這座知識庫</p>
+<p>Claude、Codex 等外部助理可透過 <strong>MCP</strong> 連上</p>
+<p>沿用同一套團隊權控，留下同一份稽核紀錄</p>
+</div>
+</section>
+<section class="slide" style="--accent:#046b4d" data-kicker="NEXT STEPS">
+<h2 class='title'>下一步</h2>
+<ul>
+<li>1. 選定一個高頻試點情境</li>
+<li>2. 小範圍導入，用內建報表量測效益</li>
+<li>3. 依成果擴大資料來源與應用</li>
+</ul>
+<p><strong>歡迎安排一次需求對談與展示。</strong></p>
+<blockquote>我們會先聽您的情境，再談要怎麼做。</blockquote>
+</section>
+<section class="slide lead" style="--accent:#34d399" data-kicker="YOUR COMPETITIVE EDGE">
+<div class="lead-inner">
+<h1>讓知識成為您的競爭力</h1>
+<h2>KnowledgeExtraction.AI</h2>
+</div>
+</section>
+<div class="hud"><span id="cur">1</span> / 36　（→ 翻頁・F11 全螢幕）</div>
+<script>
+  var slides = document.querySelectorAll('.slide');
+  var total = slides.length, i = 0;
+  function show(n){
+    i = Math.max(0, Math.min(total - 1, n));
+    slides.forEach(function(s, k){ s.classList.toggle('active', k === i); });
+    document.getElementById('cur').textContent = (i + 1);
+    var bar = document.getElementById('progress');
+    bar.style.width = ((i + 1) / total * 100) + '%';
+    bar.style.background = getComputedStyle(slides[i]).getPropertyValue('--accent').trim() || '#10b981';
+  }
+  document.addEventListener('keydown', function(e){
+    if (['ArrowRight','ArrowDown',' ','PageDown','Enter'].indexOf(e.key) >= 0){ e.preventDefault(); show(i + 1); }
+    else if (['ArrowLeft','ArrowUp','PageUp','Backspace'].indexOf(e.key) >= 0){ e.preventDefault(); show(i - 1); }
+    else if (e.key === 'Home'){ show(0); }
+    else if (e.key === 'End'){ show(total - 1); }
+  });
+  document.addEventListener('click', function(e){
+    if (e.clientX < window.innerWidth * 0.25) show(i - 1); else show(i + 1);
+  });
+  show(0);
+</script>
+</body>
+</html>

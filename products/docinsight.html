@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>智閱引擎 DocInsight — 產品介紹</title>
+<meta name="description" content="每一條結論，都告訴你出自第幾頁。智閱引擎 DocInsight 把合約、報價與規格文件轉為可搜尋、可審查、可比對的結構化知識。">
+<style>
+/* =========================================================================
+   智閱引擎 DocInsight — 產品介紹簡報
+   色票來源：DocInsight.Web/Components/Auths/Login.razor.css:13-35
+   單一檔案、零外部相依（無 CDN、無外部字型、無外部圖片）
+   ========================================================================= */
+
+:root{
+  --bg-1:#1a0a0f;
+  --bg-2:#240d14;
+  --bg-3:#33121c;
+  --bg-4:#4a1626;
+
+  --rose:#fb7185;
+  --rose-soft:#fda4af;
+  --rose-deep:#e11d48;
+  --amber:#fbbf24;
+
+  --text:#ffeef2;
+  --muted:rgba(255,214,224,.72);
+  --faint:rgba(255,214,224,.46);
+
+  --surface:rgba(36,13,20,.55);
+  --surface-strong:rgba(46,17,26,.72);
+  --border:rgba(251,113,133,.24);
+  --border-soft:rgba(251,113,133,.14);
+  --shadow:0 30px 90px rgba(0,0,0,.55);
+
+  --sans:'Helvetica Neue',Helvetica,Arial,'Microsoft JhengHei','PingFang TC','Noto Sans TC','Heiti TC',sans-serif;
+  --mono:'Cascadia Code','JetBrains Mono',Consolas,'Courier New',monospace;
+
+  --pad:clamp(1.5rem,5vw,5rem);
+}
+
+*,*::before,*::after{box-sizing:border-box;}
+
+html,body{height:100%;}
+
+body{
+  margin:0;
+  font-family:var(--sans);
+  color:var(--text);
+  background:linear-gradient(135deg,var(--bg-1),var(--bg-2) 34%,var(--bg-3) 68%,var(--bg-4));
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  overflow:hidden;
+  line-height:1.62;
+}
+
+/* 兩道光暈，比照登入頁 */
+body::before,body::after{
+  content:'';position:fixed;border-radius:50%;pointer-events:none;z-index:0;
+  filter:blur(20px);
+}
+body::before{
+  width:min(46vw,560px);height:min(46vw,560px);top:-14%;left:-10%;
+  background:radial-gradient(circle,rgba(251,113,133,.16),rgba(251,113,133,0) 68%);
+}
+body::after{
+  width:min(38vw,460px);height:min(38vw,460px);bottom:-16%;right:-8%;
+  background:radial-gradient(circle,rgba(251,191,36,.10),rgba(251,191,36,0) 68%);
+}
+
+/* ---------- 投影片容器 ---------- */
+
+.deck{position:relative;z-index:1;height:100%;}
+
+.slide{
+  position:absolute;inset:0;
+  display:none;
+  flex-direction:column;justify-content:center;
+  padding:var(--pad);
+  padding-bottom:calc(var(--pad) + 2.2rem);
+  overflow-y:auto;
+  opacity:0;
+  animation:slideIn .42s ease forwards;
+}
+.slide.is-active{display:flex;}
+
+@keyframes slideIn{
+  from{opacity:0;transform:translateY(14px);}
+  to{opacity:1;transform:none;}
+}
+
+.slide-inner{width:100%;max-width:1120px;margin:0 auto;}
+.slide--wide .slide-inner{max-width:1280px;}
+
+/* ---------- 排版元素 ---------- */
+
+.eyebrow{
+  font-family:var(--mono);
+  font-size:clamp(.68rem,1.1vw,.82rem);
+  letter-spacing:.18em;text-transform:uppercase;
+  color:var(--rose-soft);
+  margin:0 0 1.1rem;
+}
+.eyebrow .dot{color:var(--rose);}
+
+h1{
+  font-size:clamp(2.1rem,6.2vw,4.6rem);
+  font-weight:800;letter-spacing:-.035em;line-height:1.14;
+  margin:0 0 1.4rem;
+}
+h2{
+  font-size:clamp(1.7rem,4.4vw,3.1rem);
+  font-weight:800;letter-spacing:-.03em;line-height:1.2;
+  margin:0 0 1.2rem;
+}
+h3{
+  font-size:clamp(1.02rem,1.7vw,1.32rem);
+  font-weight:700;letter-spacing:-.01em;
+  margin:0 0 .5rem;
+}
+
+.lead{
+  font-size:clamp(1rem,1.8vw,1.34rem);
+  color:var(--muted);max-width:60ch;margin:0 0 1rem;
+}
+.sub{
+  font-size:clamp(.88rem,1.35vw,1.02rem);
+  color:var(--faint);max-width:64ch;margin:.6rem 0 0;
+}
+
+.rule{
+  width:84px;height:3px;border-radius:2px;
+  background:linear-gradient(90deg,var(--rose),rgba(251,113,133,0));
+  margin:1.5rem 0;
+}
+
+.accent{color:var(--rose-soft);}
+.strong-accent{color:var(--rose);font-weight:700;}
+mark{background:rgba(251,113,133,.16);color:var(--text);padding:.05em .3em;border-radius:4px;}
+
+/* ---------- 卡片與格線 ---------- */
+
+.grid{display:grid;gap:clamp(.85rem,1.6vw,1.4rem);}
+.grid-2{grid-template-columns:repeat(2,minmax(0,1fr));}
+.grid-3{grid-template-columns:repeat(3,minmax(0,1fr));}
+.grid-4{grid-template-columns:repeat(4,minmax(0,1fr));}
+
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:clamp(1rem,1.9vw,1.6rem);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+}
+.card p{margin:0;color:var(--muted);font-size:clamp(.85rem,1.25vw,.98rem);}
+.card .num{
+  font-family:var(--mono);font-size:.78rem;letter-spacing:.14em;
+  color:var(--rose);display:block;margin-bottom:.7rem;
+}
+
+/* 工程紀律卡：左側玫瑰邊 */
+.card--rule{border-left:3px solid var(--rose);}
+.card--quote blockquote{
+  margin:.9rem 0 0;padding-left:.9rem;
+  border-left:2px solid rgba(251,113,133,.4);
+  color:var(--rose-soft);font-size:clamp(.84rem,1.2vw,.96rem);font-style:normal;
+}
+
+/* 前後對比 */
+.ba{display:grid;gap:1rem;grid-template-columns:repeat(2,minmax(0,1fr));}
+.ba-item{border-radius:16px;padding:clamp(.95rem,1.7vw,1.4rem);border:1px solid var(--border-soft);}
+.ba-before{background:rgba(0,0,0,.26);}
+.ba-after{background:rgba(251,113,133,.08);border-color:var(--border);}
+.ba-tag{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;
+  display:block;margin-bottom:.6rem;
+}
+.ba-before .ba-tag{color:var(--faint);}
+.ba-after .ba-tag{color:var(--rose);}
+.ba-item p{margin:0;color:var(--muted);font-size:clamp(.85rem,1.25vw,.98rem);}
+
+/* 六個關鍵字 */
+.keywords{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(.8rem,1.6vw,1.3rem);}
+.kw{
+  border:1px solid var(--border);border-radius:16px;
+  padding:clamp(1rem,2vw,1.7rem);text-align:center;
+  background:var(--surface);
+}
+.kw .kw-word{
+  display:block;font-size:clamp(1.2rem,2.5vw,1.9rem);
+  font-weight:800;letter-spacing:-.02em;margin-bottom:.4rem;
+}
+.kw .kw-desc{font-size:clamp(.76rem,1.1vw,.88rem);color:var(--faint);}
+
+/* 大數字／大句子 */
+.mega{
+  font-size:clamp(2.4rem,8vw,6rem);
+  font-weight:800;letter-spacing:-.045em;line-height:1.08;margin:0;
+}
+.center{text-align:center;}
+.center .lead,.center .sub{margin-left:auto;margin-right:auto;}
+.center .rule{margin-left:auto;margin-right:auto;}
+
+/* 條列 */
+ul.plain{list-style:none;padding:0;margin:0;}
+ul.plain li{
+  position:relative;padding-left:1.4rem;margin-bottom:.65rem;
+  color:var(--muted);font-size:clamp(.87rem,1.3vw,1.02rem);
+}
+ul.plain li::before{
+  content:'';position:absolute;left:0;top:.62em;
+  width:7px;height:7px;border-radius:50%;background:var(--rose);
+}
+ul.plain li:last-child{margin-bottom:0;}
+
+/* ---------- 品牌標記 ---------- */
+
+.brand-mark{
+  width:clamp(84px,11vw,136px);height:clamp(84px,11vw,136px);
+  border-radius:26px;
+  overflow:hidden;padding:0;          /* SVG 底圖不自帶圓角，靠容器裁切 */
+  box-shadow:0 0 34px rgba(251,113,133,.20);
+  flex:none;
+}
+.brand-mark svg{display:block;width:100%;height:100%;}
+
+.cover-head{display:flex;align-items:center;gap:clamp(1rem,2.4vw,2rem);margin-bottom:clamp(1.4rem,3vw,2.4rem);}
+.cover-head .eyebrow{margin-bottom:.4rem;}
+.cover-name{font-size:clamp(1.1rem,2vw,1.6rem);font-weight:700;letter-spacing:-.02em;margin:0;}
+
+.badge{
+  display:inline-block;
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;
+  color:var(--rose-soft);
+  border:1px solid var(--border);border-radius:999px;
+  padding:.32rem .85rem;
+  background:rgba(251,113,133,.06);
+}
+
+/* ---------- 示意畫面（mock） ---------- */
+
+.mock{
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:rgba(0,0,0,.34);
+  overflow:hidden;
+  font-size:clamp(.68rem,1vw,.82rem);
+}
+.mock-bar{
+  display:flex;align-items:center;gap:.5rem;
+  padding:.5rem .8rem;
+  background:rgba(46,17,26,.72);
+  border-bottom:1px solid var(--border-soft);
+}
+.mock-bar .dots{display:flex;gap:.28rem;}
+.mock-bar .dots i{width:8px;height:8px;border-radius:50%;background:rgba(251,113,133,.3);display:block;}
+.mock-bar .title{font-size:.74rem;color:var(--muted);letter-spacing:.04em;}
+.mock-note{
+  margin-left:auto;font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;
+  color:var(--faint);border:1px solid var(--border-soft);border-radius:999px;padding:.1rem .5rem;
+}
+.mock-body{padding:.7rem .8rem;overflow-x:auto;}
+
+table.mock-table{width:100%;border-collapse:collapse;min-width:520px;}
+table.mock-table th{
+  text-align:left;font-weight:600;color:var(--faint);
+  font-size:.7rem;letter-spacing:.06em;
+  padding:.4rem .5rem;border-bottom:1px solid var(--border-soft);white-space:nowrap;
+}
+table.mock-table td{
+  padding:.46rem .5rem;color:var(--muted);
+  border-bottom:1px solid rgba(251,113,133,.07);vertical-align:top;
+}
+table.mock-table tr:last-child td{border-bottom:none;}
+
+.pill{
+  display:inline-block;border-radius:999px;padding:.1rem .5rem;
+  font-size:.66rem;letter-spacing:.03em;white-space:nowrap;
+}
+.pill-high{background:rgba(225,29,72,.24);color:#ffc9d6;}
+.pill-mid{background:rgba(251,191,36,.18);color:#fde68a;}
+.pill-low{background:rgba(255,255,255,.09);color:var(--muted);}
+.pill-add{background:rgba(52,211,153,.16);color:#a7f3d0;}
+.pill-del{background:rgba(225,29,72,.2);color:#ffc9d6;}
+.pill-mod{background:rgba(251,191,36,.18);color:#fde68a;}
+.pill-page{
+  background:rgba(251,113,133,.18);color:var(--rose-soft);
+  font-family:var(--mono);font-size:.64rem;
+}
+.pill-ok{background:rgba(251,113,133,.14);color:var(--rose-soft);}
+
+/* 題卡 */
+.qcard{border:1px solid var(--border-soft);border-radius:10px;padding:.7rem .8rem;background:rgba(0,0,0,.2);}
+.qcard + .qcard{margin-top:.55rem;}
+.qcard .q-head{display:flex;gap:.4rem;align-items:center;margin-bottom:.45rem;flex-wrap:wrap;}
+.qcard .q-stem{color:var(--text);margin:0 0 .45rem;font-size:.82rem;}
+.qcard .q-opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.25rem .8rem;}
+.qcard .q-opts span{color:var(--muted);font-size:.76rem;}
+.qcard .q-fold{
+  margin-top:.5rem;padding-top:.45rem;border-top:1px dashed rgba(251,113,133,.18);
+  color:var(--faint);font-size:.72rem;
+}
+
+/* 用量長條 */
+.bars{display:flex;align-items:flex-end;gap:.4rem;height:74px;padding:.3rem 0 0;}
+.bars i{flex:1;background:linear-gradient(180deg,var(--rose),rgba(225,29,72,.34));border-radius:3px 3px 0 0;display:block;}
+
+/* ---------- 講者備忘 ---------- */
+
+.notes{
+  display:none;
+  margin-top:clamp(1rem,2vw,1.6rem);
+  border-top:1px dashed rgba(251,113,133,.26);
+  padding-top:.9rem;
+  color:var(--faint);
+  font-size:clamp(.78rem,1.15vw,.9rem);
+  max-width:76ch;
+}
+.notes b{color:var(--rose-soft);font-weight:600;letter-spacing:.06em;font-size:.74rem;display:block;margin-bottom:.35rem;font-family:var(--mono);}
+body.notes-on .notes{display:block;}
+
+/* ---------- 控制列 ---------- */
+
+.hud{
+  position:fixed;z-index:20;left:0;right:0;bottom:0;
+  display:flex;align-items:center;gap:.6rem;
+  padding:.55rem clamp(.8rem,2.4vw,1.6rem);
+  background:linear-gradient(180deg,rgba(26,10,15,0),rgba(26,10,15,.82));
+  pointer-events:none;
+}
+.hud > *{pointer-events:auto;}
+
+.hud-btn{
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;
+  color:var(--muted);background:rgba(36,13,20,.7);
+  border:1px solid var(--border-soft);border-radius:999px;
+  padding:.3rem .72rem;cursor:pointer;
+  transition:color .18s,border-color .18s,background .18s;
+}
+.hud-btn:hover,.hud-btn:focus-visible{color:var(--rose-soft);border-color:var(--border);background:rgba(46,17,26,.85);}
+.hud-btn[aria-pressed="true"]{color:var(--rose);border-color:var(--rose);background:rgba(251,113,133,.12);}
+
+.hud-spacer{flex:1;}
+
+.counter{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;color:var(--faint);
+  white-space:nowrap;
+}
+.counter b{color:var(--rose-soft);font-weight:600;}
+
+.progress{
+  position:fixed;top:0;left:0;height:2px;z-index:21;
+  background:linear-gradient(90deg,var(--rose-deep),var(--rose));
+  transition:width .32s ease;
+}
+
+/* 首次進入的操作提示 */
+.hint{
+  position:fixed;z-index:30;left:50%;bottom:3.4rem;transform:translateX(-50%);
+  background:var(--surface-strong);border:1px solid var(--border);border-radius:14px;
+  padding:.7rem 1.1rem;color:var(--muted);font-size:.8rem;
+  box-shadow:var(--shadow);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  display:none;max-width:calc(100vw - 2rem);text-align:center;
+}
+.hint.show{display:block;}
+.hint kbd{
+  font-family:var(--mono);font-size:.72rem;color:var(--rose-soft);
+  border:1px solid var(--border);border-radius:5px;padding:.06rem .34rem;margin:0 .12rem;
+  background:rgba(0,0,0,.3);
+}
+
+/* ---------- 閱讀模式 ---------- */
+
+body.reading{overflow:auto;}
+body.reading .deck{height:auto;}
+body.reading .slide{
+  position:static;display:block;opacity:1;animation:none;
+  min-height:0;height:auto;
+  padding:clamp(2.2rem,5vw,4rem) var(--pad);
+  border-bottom:1px solid var(--border-soft);
+  overflow:visible;
+}
+body.reading .slide:last-child{border-bottom:none;}
+body.reading .notes{display:block;}
+body.reading .notes b{color:var(--rose-soft);}
+body.reading .mega{font-size:clamp(1.9rem,5vw,3.4rem);}
+body.reading h1{font-size:clamp(1.9rem,5vw,3.4rem);}
+body.reading .counter{display:none;}
+body.reading .progress{display:none;}
+
+/* 閱讀模式的段落編號 */
+body.reading .slide::before{
+  content:attr(data-num);
+  display:block;font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;
+  color:rgba(251,113,133,.5);margin-bottom:1rem;
+}
+
+/* ---------- 響應式 ---------- */
+
+@media (max-width:900px){
+  .grid-4{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .grid-3{grid-template-columns:1fr;}
+  .keywords{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+@media (max-width:620px){
+  .grid-2,.grid-4,.ba{grid-template-columns:1fr;}
+  .keywords{grid-template-columns:1fr;}
+  .cover-head{flex-direction:column;align-items:flex-start;}
+  .qcard .q-opts{grid-template-columns:1fr;}
+  .slide{padding-bottom:calc(var(--pad) + 3rem);}
+  /* 提示列的是鍵盤按鍵，手機用不到，而且會蓋住內容 */
+  .hint{display:none !important;}
+}
+
+/* ---------- 減少動態 ---------- */
+
+@media (prefers-reduced-motion:reduce){
+  .slide{animation:none;opacity:1;}
+  .progress{transition:none;}
+  *{scroll-behavior:auto !important;}
+}
+
+/* ---------- 列印：一頁一張 ---------- */
+
+@media print{
+  body{background:#fff;color:#111;overflow:visible;}
+  body::before,body::after{display:none;}
+  .hud,.hint,.progress{display:none !important;}
+  .deck{height:auto;}
+  .slide{
+    position:static;display:block !important;opacity:1;animation:none;
+    page-break-after:always;break-after:page;
+    min-height:auto;padding:1.4cm;border:none;
+  }
+  .slide:last-child{page-break-after:auto;break-after:auto;}
+  h1,h2,h3,.mega,.kw .kw-word{color:#111;}
+  .lead,.sub,.card p,ul.plain li,.ba-item p{color:#333;}
+  .card,.kw,.mock,.ba-item{border-color:#ccc;background:#fff;backdrop-filter:none;}
+  .notes{display:block;color:#555;border-top-color:#ccc;}
+  .brand-mark{box-shadow:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress" style="width:0"></div>
+
+<div class="deck" id="deck">
+
+<!-- ══════════════ 1 · 封面 ══════════════ -->
+<section class="slide" data-num="01 / 24">
+  <div class="slide-inner">
+    <div class="cover-head">
+      <div class="brand-mark" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="智閱引擎">
+          <defs>
+            <linearGradient id="dm-bg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#3d1520"/><stop offset="0.55" stop-color="#240d14"/><stop offset="1" stop-color="#16080c"/>
+            </linearGradient>
+            <radialGradient id="dm-glow" cx="0.2" cy="0.16" r="0.78">
+              <stop offset="0" stop-color="#fb7185" stop-opacity="0.30"/><stop offset="1" stop-color="#fb7185" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="dm-glow2" cx="0.88" cy="0.86" r="0.6">
+              <stop offset="0" stop-color="#e11d48" stop-opacity="0.26"/><stop offset="1" stop-color="#e11d48" stop-opacity="0"/>
+            </radialGradient>
+            <linearGradient id="dm-page" x1="0" y1="0" x2="0.6" y2="1">
+              <stop offset="0" stop-color="#ffeef2"/><stop offset="1" stop-color="#ffc9d6"/>
+            </linearGradient>
+            <linearGradient id="dm-beam" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#ffffff" stop-opacity="0.03"/><stop offset="0.46" stop-color="#ffe4e9" stop-opacity="0.26"/><stop offset="1" stop-color="#ffffff" stop-opacity="0.03"/>
+            </linearGradient>
+            <linearGradient id="dm-core" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#ffffff" stop-opacity="0.12"/><stop offset="0.46" stop-color="#ffffff" stop-opacity="0.92"/><stop offset="1" stop-color="#ffffff" stop-opacity="0.12"/>
+            </linearGradient>
+          </defs>
+          <rect width="512" height="512" fill="url(#dm-bg)"/>
+          <rect width="512" height="512" fill="url(#dm-glow)"/>
+          <rect width="512" height="512" fill="url(#dm-glow2)"/>
+          <g transform="translate(256,256) scale(1.1) translate(-256,-256)">
+            <path d="M52 74a18 18 0 0 1 18-18h122l56 56v326a18 18 0 0 1-18 18H70a18 18 0 0 1-18-18z" fill="url(#dm-page)"/>
+            <path d="M192 56l56 56h-46a10 10 0 0 1-10-10z" fill="#e11d48" fill-opacity="0.30"/>
+            <g fill="#e11d48">
+              <rect x="84" y="140" width="132" height="16" rx="8" fill-opacity="0.62"/>
+              <rect x="84" y="186" width="100" height="16" rx="8" fill-opacity="0.40"/>
+              <rect x="84" y="232" width="132" height="16" rx="8" fill-opacity="0.62"/>
+              <rect x="84" y="278" width="84" height="16" rx="8" fill-opacity="0.40"/>
+              <rect x="84" y="324" width="120" height="16" rx="8" fill-opacity="0.62"/>
+              <rect x="84" y="370" width="72" height="16" rx="8" fill-opacity="0.40"/>
+            </g>
+            <polygon points="278,-40 338,-40 250,552 190,552" fill="url(#dm-beam)"/>
+            <polygon points="306,-40 318,-40 230,552 218,552" fill="url(#dm-core)"/>
+            <g stroke="#fb7185" stroke-width="7" stroke-linecap="round" stroke-opacity="0.72" fill="none">
+              <line x1="352" y1="256" x2="438" y2="150"/>
+              <line x1="352" y1="256" x2="446" y2="262"/>
+              <line x1="352" y1="256" x2="438" y2="368"/>
+              <line x1="446" y1="262" x2="486" y2="200"/>
+              <line x1="446" y1="262" x2="486" y2="324"/>
+            </g>
+            <g>
+              <circle cx="352" cy="256" r="26" fill="#ffeef2"/>
+              <circle cx="352" cy="256" r="11" fill="#e11d48" fill-opacity="0.5"/>
+              <rect x="412" y="124" width="52" height="52" rx="14" fill="#fb7185"/>
+              <circle cx="446" cy="262" r="21" fill="#fda4af"/>
+              <rect x="412" y="342" width="52" height="52" rx="14" fill="#fb7185"/>
+              <circle cx="486" cy="200" r="17" fill="#fda4af" fill-opacity="0.9"/>
+              <circle cx="486" cy="324" r="17" fill="#fda4af" fill-opacity="0.9"/>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <div>
+        <p class="eyebrow">智閱引擎 <span class="dot">·</span> 文件智慧</p>
+        <p class="cover-name">DocInsight</p>
+      </div>
+    </div>
+
+    <h1>每一條結論，<br>都告訴你出自第幾頁。</h1>
+    <div class="rule"></div>
+    <p class="lead">把合約、報價與規格文件，轉為可搜尋、可審查、可比對的結構化知識。</p>
+    <p class="sub"><span class="badge">版本 1.0.1</span></p>
+
+    <div class="notes">
+      <b>講者備忘</b>
+      不要急著翻頁。讓這句話在螢幕上待久一點——整場簡報就是為了讓客戶記住這一句。
+      自我介紹要短：「我是 {{講者姓名}}，接下來十五分鐘，我要說服你一件事：AI 讀文件這件事，
+      關鍵不在它讀得多快，而在它敢不敢告訴你答案是從哪裡來的。」
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 2 · 一個問題 ══════════════ -->
+<section class="slide" data-num="02 / 24">
+  <div class="slide-inner center">
+    <p class="eyebrow">先問一個問題</p>
+    <h2 class="mega">你們部門上個月，<br>花了多少小時用眼睛讀 PDF？</h2>
+    <div class="rule"></div>
+    <p class="lead">這個數字，通常沒有人算過。</p>
+    <p class="sub">而沒有人算過的成本，往往就是最貴的那一筆。</p>
+
+    <div class="notes">
+      <b>講者備忘</b>
+      這裡真的要停下來等。看著客戶，數三秒。通常會有人苦笑或搖頭——那就是你要的反應。
+      如果對方主動報一個數字，追問：「那是誰在讀？他一小時的成本是多少？」讓他自己算出金額，
+      比你講任何投資報酬率都有效。
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 3 · PDF 的三個天生缺陷 ══════════════ -->
+<section class="slide slide--wide" data-num="03 / 24">
+  <div class="slide-inner">
+    <p class="eyebrow">第一幕 <span class="dot">·</span> 舊世界</p>
+    <h2>問題不在你的同事不夠認真。<br>問題在 PDF 這個格式本身。</h2>
+    <div class="rule"></div>
+
+    <div class="grid grid-3">
+      <div class="card">
+        <span class="num">缺陷一</span>
+        <h3>它是「印出來的樣子」，<br>不是「內容」</h3>
+        <p>PDF 記錄的是每個字要印在紙上的哪個座標。掃描件更徹底——那根本就是一張圖片，連搜尋都搜不到。</p>
+      </div>
+      <div class="card">
+        <span class="num">缺陷二</span>
+        <h3>它沒有結構</h3>
+        <p>你沒辦法叫電腦「把所有罰則條款列給我」。因為 PDF 裡沒有「罰則」這個欄位，只有一堆座標上的文字。</p>
+      </div>
+      <div class="card">
+        <span class="num">缺陷三</span>
+        <h3>它沒辦法比對</h3>
+        <p>兩份 80 頁的合約攤在桌上，人眼比對幾乎不可能做到不漏。而你需要的正是「不漏」。</p>
+      </div>
+    </div>
+
+    <div class="notes">
+      <b>講者備忘</b>
+      這一頁的作用是把責任從「人」轉移到「格式」。企業管理者聽到「你的同事不夠認真」會防衛，
+      聽到「這是格式的問題」會點頭。三個缺陷念一遍就好，不要展開——真正的痛在後面三頁。
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 4 · 法務 ══════════════ -->
+<section class="slide" data-num="04 / 24">
+  <div class="slide-inner">
+    <p class="eyebrow">第一幕 <span class="dot">·</span> 法務組</p>
+    <h2>「這份合約的違約金<br>到底怎麼算？」</h2>
+    <div class="rule"></div>
+
+    <div class="ba">
+      <div class="ba-item ba-before">
+        <span class="ba-tag">以前</span>
+        <p>法務得從第 1 頁翻到第 80 頁。找到了，還要再確認一次有沒有別的章節也提到罰則——因為條款從來不會好好地待在同一個地方。</p>
+      </div>
+      <div class="ba-item ba-after">
+        <span class="ba-tag">代價</span>
+        <p>漏看一條罰則，<mark>可能就是幾十萬的損失</mark>。而且愈是趕件、愈是老闆站在旁邊等，愈容易漏。</p>
+      </div>
+    </div>
+
+    <div class="notes">
+      <b>講者備忘</b>
+      「可能」這兩個字要念出來，不要含糊帶過。我們沒有做過產業調查，不能宣稱平均損失金額。
+      誠實的估計比誇大的數字更能建立信任——尤其對面坐的是法務或財務主管時。
+      如果客戶自己講出一個他們吃過虧的案例，那一場簡報就成功一半了。
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 5 · 採購 ══════════════ -->
+<section class="slide" data-num="05 / 24">
+  <div class="slide-inner">
+    <p class="eyebrow">第一幕 <span class="dot">·</span> 採購組</p>
+    <h2>供應商說：<br>「只改了一點點。」</h2>
+    <div class="rule"></div>
+
+    <div class="ba">
+      <div class="ba-item ba-before">
+        <span class="ba-tag">以前</span>
+        <p>對方回傳一份「修訂版」，表面上跟舊版長得一模一樣。你只有兩個選擇：整份重看，或者相信對方。</p>
+      </div>
+      <div class="ba-item ba-after">
+        <span class="ba-tag">代價</span>
+        <p>付款天數從 30 天變成 60 天，藏在第 12 條的一個數字裡。等你發現的時候，合約已經簽了。</p>
+      </div>
+    </div>
+
+    <div class="notes">
+      <b>講者備忘</b>
+      這一頁對採購與業務主管殺傷力最大。可以加一句：「各位有沒有遇過簽完才發現條件變差的情況？」
+      通常會有人點頭。付款天數這個例子是產業常態，不是我們的客戶案例——所以講的時候要用
+      「例如」而不是「我們有客戶」。
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 6 · 教育訓練 ══════════════ -->
+<section class="slide" data-num="06 / 24">
+  <div class="slide-inner">
+    <p class="eyebrow">第一幕 <span class="dot">·</span> 教育訓練</p>
+    <h2>手冊改版了。<br>考卷呢？</h2>
+    <div class="rule"></div>
+
+    <div class="ba">
+      <div class="ba-item ba-before">
+        <span class="ba-tag">以前</span>
+        <p>要出一份新考卷驗收員工有沒有讀懂，得有人重讀 60 頁，再手工出 30 題。</p>
+      </div>
+      <div class="ba-item ba-after">
+        <span class="ba-tag">而且</span>
+        <p>出題品質完全取決於出題者當天的心情與熟悉度。同一本手冊，換一個人出，考的東西可能完全不同。</p>
+      </div>
+    </div>
+
+    <p class="lead" style="margin-top:1.6rem;">這件事，<span class="strong-accent">要做兩天</span>。</p>
+
+    <div class="notes">
+      <b>講者備忘</b>
+      「兩天」這個數字先埋在這裡，第 18 頁會回收它——那是整份簡報唯一一個經過驗證的量化效益。
+      先讓客戶感受到兩天有多久，後面說「一兩個小時」時的落差才會有力量。
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 7 · 共同點 ══════════════ -->
+<section class="slide" data-num="07 / 24">
+  <div class="slide-inner center">
+    <p class="eyebrow">第一幕 <span class="dot">·</span> 收束</p>
+    <h2 class="mega">人，在用眼睛，<br>做機器該做的事。</h2>
+    <div class="rule"></div>
+    <p class="lead">法務、採購、教育訓練——三個部門，三種痛苦，同一個根源。</p>
+
+    <div class="notes">
+      <b>講者備忘</b>
+      第一幕結束。這句話講完要停頓，然後轉身——因為下一頁是全場最容易被問到的問題，
+      你要主動把它端上檯面，而不是等對方在 Q&amp;A 時丟過來。主動提問等於你掌握節奏。
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 8 · 那用 ChatGPT 不就好了 ══════════════ -->
+<section class="slide" data-num="08 / 24">
+  <div class="slide-inner center">
+    <p class="eyebrow">第二幕 <span class="dot">·</span> 那個問題</p>
+    <h2 class="mega">「那我把 PDF<br>丟給 ChatGPT，<br>不就好了？」</h2>
+    <div class="rule"></div>
+    <p class="lead">這是我們每一場簡報都會被問到的問題。所以我們直接回答。</p>
+
+    <div class="notes">
+      <b>講者備忘</b>
+      語氣要輕鬆，不要防衛。可以笑著說：「這個問題我每場都被問，所以我乾脆做成一頁投影片。」
+      重點：<b style="display:inline">絕對不要說通用 AI 沒有用</b>。它很有用，只是不適合拿來做要負責任的事。
+      這個區分講清楚，客戶才會覺得你誠實。
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 9 · 四個致命問題 ══════════════ -->
+<section class="slide slide--wide" data-num="09 / 24">
+  <div class="slide-inner">
+    <p class="eyebrow">第二幕 <span class="dot">·</span> 四個問題</p>
+    <h2>可以。但有四件事，<br>它幫不了你。</h2>
+    <div class="rule"></div>
+
+    <div class="grid grid-4">
+      <div class="card">
+        <span class="num">01</span>
+        <h3>它會瞎掰，<br>而且你看不出來</h3>
+        <p>一本正經地編出一條不存在的條款，語氣跟真的一模一樣。錯的答案不會自己舉手。</p>
+      </div>
+      <div class="card">
+        <span class="num">02</span>
+        <h3>它不告訴你出處</h3>
+        <p>「第 37 頁」跟「大概在後面」，在法務會議上是兩件完全不同的事。</p>
+      </div>
+      <div class="card">
+        <span class="num">03</span>
+        <h3>它不知道花了多少錢</h3>
+        <p>帳單月底才來，而且是一個總數。誰用的？哪份文件特別貴？沒有人答得出來。</p>
+      </div>
+      <div class="card">
+        <span class="num">04</span>
+        <h3>你的機密合約，<br>人人可見</h3>
+        <p>沒有團隊、沒有角色、沒有列級權限。貼上去，就是貼上去了。</p>
+      </div>
+    </div>
+
+    <div class="notes">
+      <b>講者備忘</b>
+      四格不要平均分配時間。看對面坐的是誰：法務主管講 01 和 02，財務或 IT 主管講 03 和 04。
+      如果客戶已經在用 ChatGPT 處理文件，問一句：「那你們現在怎麼確認它沒有講錯？」
+      通常答案是「我們會自己再看一遍」——那就是你要的破口。
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 10 · 收束 ══════════════ -->
+<section class="slide" data-num="10 / 24">
+  <div class="slide-inner center">
+    <p class="eyebrow">第二幕 <span class="dot">·</span> 收束</p>
+    <h2 class="mega">通用 AI 給你<br>一個答案。</h2>
+    <div class="rule"></div>
+    <h2 style="margin-top:0;">企業需要的，是一個<span class="strong-accent">查得到出處</span>的答案。</h2>
+
+    <div class="notes">
+      <b>講者備忘</b>
+      這是全場的樞紐。前十頁的痛苦到這裡收束成一句可以被解決的話。
+      講完停一拍，然後翻頁——下一頁是整場的最高點，中間不要有任何多餘的話。
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 11 · 核心主張 ══════════════ -->
+<section class="slide" data-num="11 / 24">
+  <div class="slide-inner center">
+    <p class="eyebrow">智閱引擎 <span class="dot">·</span> DocInsight</p>
+    <h1 style="font-size:clamp(2.3rem,7vw,5.2rem);">每一條結論，<br>都告訴你出自第幾頁。</h1>
+    <div class="rule"></div>
+    <p class="lead" style="font-size:clamp(1.05rem,2vw,1.5rem);">因為不能查證的答案，等於沒有答案。</p>
+    <p class="sub">合約條款 → 頁碼。版本差異 → 頁碼。考題 → 頁碼。<br>而當頁碼對不上的時候，它不猜。</p>
+
+    <div class="notes">
+      <b>講者備忘</b>
+      最重要的一頁。慢。念完主標題之後停兩秒，再念副標。
+      最後那句「當頁碼對不上的時候，它不猜」是通往下一頁的橋——說完直接翻，
+      下一頁就是解釋我們憑什麼敢這樣講。
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 12 · 三條工程紀律 ══════════════ -->
+<section class="slide slide--wide" data-num="12 / 24">
+  <div class="slide-inner">
+    <p class="eyebrow">我們憑什麼敢這樣講</p>
+    <h2>三條工程紀律。</h2>
+    <div class="rule"></div>
+
+    <div class="grid grid-3">
+      <div class="card card--rule card--quote">
+        <span class="num">紀律一</span>
+        <h3>頁碼是「算」出來的，<br>不是 AI 說的</h3>
+        <p>我們只要求模型在每頁內容前輸出一個中性分界符，頁碼由程式依批次起始頁換算。分界符數量對不上該批次頁數，就退回較粗的頁段標記。</p>
+        <blockquote>錯的頁碼比沒有頁碼更糟，對不上就不猜。</blockquote>
+      </div>
+      <div class="card card--rule card--quote">
+        <span class="num">紀律二</span>
+        <h3>數字不交給 AI 算</h3>
+        <p>各條款類型、各風險等級、各覆核狀態的數量，一律由程式即時計算，不經過模型。</p>
+        <blockquote>模型算錯的數字，看起來一樣可信。</blockquote>
+      </div>
+      <div class="card card--rule card--quote">
+        <span class="num">紀律三</span>
+        <h3>每一次呼叫都記帳，<br>失敗也記</h3>
+        <p>因為失敗照樣計費。而且回應碼是 200 不代表成功——我們判定的是回應內容裡的狀態欄位，不是 HTTP 狀態碼。</p>
+        <blockquote>看不到的成本，就是控不住的成本。</blockquote>
+      </div>
+    </div>
+
+    <div class="notes">
+      <b>講者備忘</b>
+      這一頁是我們相對於通用 AI 真正拿得出手的差異，而且它不是功能，是紀律——功能可以抄，紀律不好抄。
+      面對技術背景的聽眾可以展開講紀律一的細節；面對純管理階層，三句引言念完就夠了。
+      引言是產品文件裡的原句，不是行銷詞。
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 13 · 一條原則 ══════════════ -->
+<section class="slide" data-num="13 / 24">
+  <div class="slide-inner center">
+    <p class="eyebrow">貫穿全系統的一條原則</p>
+    <h2 class="mega">寧可不給，<br>也不給錯的。</h2>
+    <div class="rule"></div>
+    <p class="lead">所以我們的用量統計只給你 token 數與呼叫次數，<span class="accent">不給新台幣金額</span>。</p>
+    <p class="sub">因為每個模型費率不同、而且還會調價。換算錯的金額，比沒有金額更糟。<br>這跟頁碼是同一條原則。</p>
+
+    <div class="notes">
+      <b>講者備忘</b>
+      這一頁看起來是在講缺點，其實是在證明紀律是真的。
+      任何人都可以說「我們很嚴謹」，但只有真的嚴謹的產品，才會為了原則放棄一個客戶想要的功能。
+      如果客戶追問「那我怎麼知道花了多少錢」，回答：「我們給你 token 數與模型名稱，
+      你乘上你自己的合約費率——那個數字才是對的。」
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 14 · 六個關鍵字 ══════════════ -->
+<section class="slide slide--wide" data-num="14 / 24">
+  <div class="slide-inner">
+    <p class="eyebrow">能力全景</p>
+    <h2>六個關鍵字。</h2>
+    <div class="rule"></div>
+
+    <div class="keywords">
+      <div class="kw"><span class="kw-word">看得懂</span><span class="kw-desc">PDF 逐頁轉成純文字</span></div>
+      <div class="kw"><span class="kw-word">抽得出</span><span class="kw-desc">五類合約條款自動抽出</span></div>
+      <div class="kw"><span class="kw-word">比得出</span><span class="kw-desc">新舊版逐條列出差異</span></div>
+      <div class="kw"><span class="kw-word">出得了題</span><span class="kw-desc">四種題型與線上測驗</span></div>
+      <div class="kw"><span class="kw-word">附頁碼</span><span class="kw-desc">每一條結果都可回查</span></div>
+      <div class="kw"><span class="kw-word">算得出錢</span><span class="kw-desc">每次呼叫逐筆記帳</span></div>
+    </div>
+
+    <p class="sub" style="margin-top:1.4rem;">接下來五頁，一個一個看。</p>
+
+    <div class="notes">
+      <b>講者備忘</b>
+      這一頁是目次，不要停留。快速念過六個詞，讓客戶知道還有五頁、大概要花多久。
+      時間不夠時，這一頁講完可以直接跳到第 21 頁的「我們刻意不做的四件事」，
+      再跳到第 22 頁收尾——中間五頁是展開，不是必要。
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 15 · 看得懂 ══════════════ -->
+<section class="slide slide--wide" data-num="15 / 24">
+  <div class="slide-inner">
+    <p class="eyebrow">能力一 <span class="dot">·</span> 看得懂</p>
+    <h2>文件解析</h2>
+    <div class="rule"></div>
+
+    <div class="grid grid-2" style="align-items:start;">
+      <div>
+        <p class="lead">上傳 PDF，系統在背景切頁，逐批送 AI 轉錄成純文字——而且每一頁都帶著頁碼標記。</p>
+        <ul class="plain">
+          <li>單檔上限 100MB，每批最多 20 頁</li>
+          <li>重複上傳自動偵測，同一份文件不重複計費</li>
+          <li>解析進度以頁數表示，可中途停止、可單批重試</li>
+          <li>轉錄有錯字？純文字可以直接搜尋、取代、存回去</li>
+        </ul>
+      </div>
+      <div class="mock">
+        <div class="mock-bar">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <span class="title">文件管理</span>
+          <span class="mock-note">示意畫面</span>
+        </div>
+        <div class="mock-body">
+          <table class="mock-table">
+            <tr><th>標題</th><th>頁數</th><th>狀態</th><th>進度</th></tr>
+            <tr><td>2026 年度採購合約</td><td>82</td><td><span class="pill pill-ok">已完成</span></td><td>82 / 82</td></tr>
+            <tr><td>供應商規格書 v3</td><td>46</td><td><span class="pill pill-mid">解析中</span></td><td>20 / 46</td></tr>
+            <tr><td>設備維護報價單</td><td>12</td><td><span class="pill pill-ok">已完成</span></td><td>12 / 12</td></tr>
+            <tr><td>作業手冊（第五版）</td><td>60</td><td><span class="pill pill-low">排隊中</span></td><td>0 / 60</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="notes">
+      <b>講者備忘</b>
+      「重複上傳偵測」值得多講一句——它用檔案內容的雜湊比對，所以同一份文件換個檔名再傳一次，
+      系統認得出來，不會再收一次費。這種細節最能說明我們是認真在幫客戶控成本。
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 16 · 抽得出 ══════════════ -->
+<section class="slide slide--wide" data-num="16 / 24">
+  <div class="slide-inner">
+    <p class="eyebrow">能力二 <span class="dot">·</span> 抽得出</p>
+    <h2>合約審查</h2>
+    <div class="rule"></div>
+
+    <div class="grid grid-2" style="align-items:start;">
+      <div>
+        <p class="lead">五類條款自動抽出，每一條都帶著頁碼與風險等級。</p>
+        <ul class="plain">
+          <li><span class="accent">付款期程、交付里程碑、驗收條件、罰則、保固</span></li>
+          <li>每條含內容、相關日期、頁碼、風險等級</li>
+          <li>人工覆核狀態：未覆核 / 已確認 / 有疑慮</li>
+          <li>可依風險與類型篩選排序，匯出 CSV 與 PDF</li>
+          <li>再按一次，AI 幫你寫出整體彙總與建議</li>
+        </ul>
+      </div>
+      <div class="mock">
+        <div class="mock-bar">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <span class="title">合約審查</span>
+          <span class="mock-note">示意畫面</span>
+        </div>
+        <div class="mock-body">
+          <table class="mock-table">
+            <tr><th>類型</th><th>內容</th><th>頁碼</th><th>風險</th><th>覆核</th></tr>
+            <tr><td>罰則</td><td>逾期交付每日按總價 0.3% 計罰</td><td><span class="pill pill-page">第 37 頁</span></td><td><span class="pill pill-high">高</span></td><td>有疑慮</td></tr>
+            <tr><td>付款期程</td><td>驗收合格後 60 個工作天內付款</td><td><span class="pill pill-page">第 12 頁</span></td><td><span class="pill pill-high">高</span></td><td>已確認</td></tr>
+            <tr><td>保固</td><td>自驗收日起 12 個月</td><td><span class="pill pill-page">第 54 頁</span></td><td><span class="pill pill-mid">中</span></td><td>已確認</td></tr>
+            <tr><td>驗收條件</td><td>需通過雙方會同之功能測試</td><td><span class="pill pill-page">第 41 頁</span></td><td><span class="pill pill-low">低</span></td><td>未覆核</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="notes">
+      <b>講者備忘</b>
+      指著示意畫面上的「第 37 頁」講：「這一欄，就是整套系統存在的理由。」
+      「有疑慮」這個狀態也要點出來——它證明系統預設人要看過，而不是叫你照單全收。
+      如果客戶問「五類夠不夠」，誠實回答：目前就是這五類，因為這五類是採購與法務最常吃虧的地方。
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 17 · 比得出 ══════════════ -->
+<section class="slide slide--wide" data-num="17 / 24">
+  <div class="slide-inner">
+    <p class="eyebrow">能力三 <span class="dot">·</span> 比得出</p>
+    <h2>版本比對</h2>
+    <div class="rule"></div>
+
+    <div class="grid grid-2" style="align-items:start;">
+      <div>
+        <p class="lead">選舊版與新版兩份文件，逐條列出新增、刪除、修改。</p>
+        <ul class="plain">
+          <li>附兩邊原文、兩邊頁碼</li>
+          <li>還有<span class="accent">對我方的影響等級與理由</span>——不只告訴你改了什麼，還告訴你這對你是好是壞</li>
+          <li>提示詞刻意用「文件」而非「合約」，所以報價單與規格書改版同樣適用</li>
+          <li>可篩選、可匯出 CSV 與 PDF</li>
+        </ul>
+      </div>
+      <div class="mock">
+        <div class="mock-bar">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <span class="title">版本比對</span>
+          <span class="mock-note">示意畫面</span>
+        </div>
+        <div class="mock-body">
+          <table class="mock-table">
+            <tr><th>變更</th><th>條款</th><th>舊版</th><th>新版</th><th>影響</th></tr>
+            <tr><td><span class="pill pill-mod">修改</span></td><td>付款期程</td><td>30 天<br><span class="pill pill-page">第 12 頁</span></td><td>60 天<br><span class="pill pill-page">第 12 頁</span></td><td><span class="pill pill-high">高</span></td></tr>
+            <tr><td><span class="pill pill-add">新增</span></td><td>單方終止權</td><td>—</td><td>甲方得隨時終止<br><span class="pill pill-page">第 29 頁</span></td><td><span class="pill pill-high">高</span></td></tr>
+            <tr><td><span class="pill pill-del">刪除</span></td><td>保固延長選項</td><td>可加購延長 24 個月<br><span class="pill pill-page">第 55 頁</span></td><td>—</td><td><span class="pill pill-mid">中</span></td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="notes">
+      <b>講者備忘</b>
+      這一頁請務必連結回第 5 頁的採購故事：「還記得那句『只改了一點點』嗎？這就是那一點點。」
+      示意畫面上「30 天 → 60 天」正是第 5 頁埋的伏筆，前後呼應的效果很好。
+      補一句：舊版新版的順序是有意義的，選反了結果會顛倒——所以介面上會要求你明確指定。
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 18 · 出得了題 ══════════════ -->
+<section class="slide slide--wide" data-num="18 / 24">
+  <div class="slide-inner">
+    <p class="eyebrow">能力四 <span class="dot">·</span> 出得了題</p>
+    <h2>題庫產生，與線上測驗</h2>
+    <div class="rule"></div>
+
+    <div class="grid grid-2" style="align-items:start;">
+      <div>
+        <p class="lead">四種題型一次產出：單選、多選、是非、情境。每題附正解、解析、難度與<span class="accent">來源頁碼</span>。</p>
+        <ul class="plain">
+          <li>題目一律從「未覆核」開始——人的時間花在審題，不是想題目</li>
+          <li>採用的題目組成考卷，發一條<span class="accent">免登入連結</span>給學員</li>
+          <li>每人的題序與選項順序都不同</li>
+          <li>交卷即時算分，逾時自動結算，還有逐題全班答對率</li>
+          <li>不用教材檔案也能出題：把出題規格存成提示詞範本，重複使用</li>
+        </ul>
+        <p class="lead" style="margin-top:1.2rem;">第 6 頁那件<span class="strong-accent">要做兩天</span>的事，<br>現在是<span class="strong-accent">一兩個小時</span>。</p>
+      </div>
+      <div class="mock">
+        <div class="mock-bar">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <span class="title">題庫產生</span>
+          <span class="mock-note">示意畫面</span>
+        </div>
+        <div class="mock-body">
+          <div class="qcard">
+            <div class="q-head">
+              <span class="pill pill-ok">單選</span><span class="pill pill-mid">中</span>
+              <span class="pill pill-page">第 23 頁</span>
+            </div>
+            <p class="q-stem">依作業手冊規定，設備異常停機後應於多久內完成通報？</p>
+            <div class="q-opts"><span>A. 15 分鐘內</span><span>B. 30 分鐘內</span><span>C. 1 小時內</span><span>D. 當班結束前</span></div>
+            <div class="q-fold">正解與解析已收起 · 審題狀態：未覆核</div>
+          </div>
+          <div class="qcard">
+            <div class="q-head">
+              <span class="pill pill-ok">情境</span><span class="pill pill-high">難</span>
+              <span class="pill pill-page">第 41 頁</span>
+            </div>
+            <p class="q-stem">交接班時發現前一班未完成點檢紀錄，依手冊你應該先做什麼？</p>
+            <div class="q-fold">正解與解析已收起 · 審題狀態：已採用</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="notes">
+      <b>講者備忘</b>
+      這是整份簡報唯一一個經過驗證的量化效益，一定要講：兩天 → 一兩個小時。
+      不要說成「省下 90% 時間」——我們沒有算過那個百分比。就照原話講。
+      另外「正解預設收起來」這個設計值得提一句：因為審題的人要先自己想一遍，才看得出題目好不好。
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 19 · 算得出錢 ══════════════ -->
+<section class="slide slide--wide" data-num="19 / 24">
+  <div class="slide-inner">
+    <p class="eyebrow">能力五 <span class="dot">·</span> 算得出錢</p>
+    <h2>用量統計，與請求佇列</h2>
+    <div class="rule"></div>
+
+    <div class="grid grid-2" style="align-items:start;">
+      <div>
+        <p class="lead">每一次 AI 呼叫，一筆紀錄。</p>
+        <ul class="plain">
+          <li>使用者、來源文件、模型、token 明細、耗時、成敗</li>
+          <li><span class="accent">失敗照樣記錄</span>——因為照樣計費</li>
+          <li>可看今日、本月、自訂區間，可依作業類型篩選</li>
+          <li>可以查每一次呼叫實際送了什麼、回了什麼</li>
+          <li>請求佇列：現在誰在跑、還有幾個在排、你的那一筆被誰擋住</li>
+        </ul>
+      </div>
+      <div class="mock">
+        <div class="mock-bar">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <span class="title">用量統計</span>
+          <span class="mock-note">示意畫面</span>
+        </div>
+        <div class="mock-body">
+          <div class="bars" aria-hidden="true">
+            <i style="height:34%"></i><i style="height:58%"></i><i style="height:41%"></i><i style="height:76%"></i>
+            <i style="height:52%"></i><i style="height:88%"></i><i style="height:63%"></i><i style="height:29%"></i>
+            <i style="height:70%"></i><i style="height:46%"></i><i style="height:81%"></i><i style="height:55%"></i>
+          </div>
+          <table class="mock-table" style="margin-top:.6rem;">
+            <tr><th>作業</th><th>來源</th><th>Token</th><th>耗時</th><th>結果</th></tr>
+            <tr><td>合約審查</td><td>2026 年度採購合約</td><td>18,402</td><td>42s</td><td><span class="pill pill-ok">成功</span></td></tr>
+            <tr><td>文件解析</td><td>供應商規格書 v3</td><td>9,116</td><td>28s</td><td><span class="pill pill-ok">成功</span></td></tr>
+            <tr><td>版本比對</td><td>報價單 v2 → v3</td><td>12,730</td><td>51s</td><td><span class="pill pill-high">失敗</span></td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="notes">
+      <b>講者備忘</b>
+      指著示意畫面上那筆「失敗」講：「這一筆失敗了，但它照樣被記下來——因為它照樣計費。
+      很多系統不會記失敗的呼叫，於是你的帳單永遠對不起來。」
+      這一頁對財務與 IT 主管的說服力最強，如果對面有這兩種人，多花一點時間。
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 20 · 誰看得到什麼 ══════════════ -->
+<section class="slide slide--wide" data-num="20 / 24">
+  <div class="slide-inner">
+    <p class="eyebrow">企業關切 <span class="dot">·</span> 安全與權限</p>
+    <h2>機密文件，<br>不該人人可見。</h2>
+    <div class="rule"></div>
+
+    <div class="grid grid-3">
+      <div class="card">
+        <span class="num">列級權控</span>
+        <h3>每份文件貼「團隊」標籤</h3>
+        <p>沒有貼標籤的才是公開。使用者看得到什麼，由他所屬的團隊決定——不是由他能不能進入那一頁決定。</p>
+      </div>
+      <div class="card">
+        <span class="num">動作級權限</span>
+        <h3>不只是「能不能進這一頁」</h3>
+        <p>檢視、新增、修改、刪除、匯出，每個動作各自授權。看得到不等於改得動，改得動不等於匯得出去。</p>
+      </div>
+      <div class="card">
+        <span class="num">人在迴路</span>
+        <h3>每一條都留著覆核狀態</h3>
+        <p>條款有覆核狀態，題目有審題狀態。系統預期你要看過——這是設計，不是待改進事項。</p>
+      </div>
+    </div>
+
+    <p class="sub" style="margin-top:1.3rem;">網頁介面與 API 共用同一套權限判定，不會有一邊擋住、另一邊放行的情況。</p>
+
+    <div class="notes">
+      <b>講者備忘</b>
+      如果對面有 IT 或資安人員，這一頁要慢慢講，並且主動提「網頁與 API 共用同一套判定」——
+      這是他們最常踩到的坑，聽到你主動提會加很多分。
+      也可以在這裡回收第 9 頁的第四個問題：「還記得剛剛說貼上去就是貼上去了嗎？這就是差別。」
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 21 · 我們刻意不做的四件事 ══════════════ -->
+<section class="slide slide--wide" data-num="21 / 24">
+  <div class="slide-inner">
+    <p class="eyebrow">誠實邊界</p>
+    <h2>我們刻意不做的四件事。</h2>
+    <div class="rule"></div>
+
+    <div class="grid grid-4">
+      <div class="card card--rule">
+        <span class="num">不做全自動</span>
+        <p>AI 產出的是<span class="accent">初稿</span>。條款可能抽漏、風險等級可能判得太保守或太寬鬆。所有結果都設計成可覆核，就是因為預期你要看過。</p>
+      </div>
+      <div class="card card--rule">
+        <span class="num">不做萬用轉檔</span>
+        <p>目前<span class="accent">只收 PDF</span>，而且不支援加密的 PDF。Word、Excel、簡報請先自行另存成 PDF。（教材另可收 Markdown。）</p>
+      </div>
+      <div class="card card--rule">
+        <span class="num">不做 DMS</span>
+        <p>不做版本樹、不做簽核流程、不做全文檢索引擎。那些系統你已經有了，我們不打算再做一套。</p>
+      </div>
+      <div class="card card--rule">
+        <span class="num">不做即時</span>
+        <p>解析是背景工作，一份 80 頁的 PDF 要跑好幾分鐘。而且<span class="accent">全站同時只有一個工作者</span>，多人上傳會排隊——所以我們讓你看得到自己排第幾個。</p>
+      </div>
+    </div>
+
+    <p class="lead" style="margin-top:1.5rem;">這四件事我們現在告訴你，<br>是因為我們不想在你導入三個月後，才讓你發現。</p>
+
+    <div class="notes">
+      <b>講者備忘</b>
+      不要用道歉的語氣講這一頁。這是強項頁，語氣要平穩、甚至帶點自豪。
+      最後那句是全場第二重要的句子，講完停一拍。
+      經驗上這一頁常常是客戶決定信任你的地方——因為沒有幾個業務會主動講自己的產品不能做什麼。
+      如果客戶當場說「那我們需要 Word」，誠實回答：另存成 PDF 再上傳，這是目前的做法。
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 22 · 行動 ══════════════ -->
+<section class="slide" data-num="22 / 24">
+  <div class="slide-inner center">
+    <p class="eyebrow">所以</p>
+    <h2 class="mega">別相信我說的。</h2>
+    <div class="rule"></div>
+    <h2 style="margin-top:0;">帶一份你手上<span class="strong-accent">最難</span>的合約來。</h2>
+    <p class="sub">不用挑好懂的。挑那份你自己也要翻很久的那一份。</p>
+
+    <div class="notes">
+      <b>講者備忘</b>
+      這是 CTA，講完就閉嘴，等對方回應。不要接著介紹方案或報價——讓沉默替你工作。
+      如果對方真的答應了，當場約時間，並請他先確認那份 PDF 沒有加密。
+      這一步是整場簡報唯一要達成的目標：拿到一份真實文件。
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 23 · One More Thing ══════════════ -->
+<section class="slide slide--wide" data-num="23 / 24">
+  <div class="slide-inner">
+    <p class="eyebrow">One more thing</p>
+    <h2>同一份純文字地基，<br>還可以長出更多東西。</h2>
+    <div class="rule"></div>
+    <p class="lead">因為各個應用的差異，其實只在提示詞與輸出結構。地基一樣，所以新應用長得很快。</p>
+
+    <div class="grid grid-4">
+      <div class="card">
+        <span class="num">規劃中</span>
+        <h3>SOP 與現場檢核表萃取</h3>
+        <p>手冊與現場作業之間的落差，過去只能靠人工轉寫。</p>
+      </div>
+      <div class="card">
+        <span class="num">規劃中</span>
+        <h3>法規與標準符合性檢查</h3>
+        <p>把「被查到才知道」，提前為「送出前就知道」。</p>
+      </div>
+      <div class="card">
+        <span class="num">規劃中</span>
+        <h3>結構化資料萃取</h3>
+        <p>PDF 裡的表格沒辦法直接進入後續系統，抽出來才能計算與勾稽。</p>
+      </div>
+      <div class="card">
+        <span class="num">規劃中</span>
+        <h3>文件問答與知識檢索</h3>
+        <p>把一疊文件，變成一個可以詢問、而且可以回溯查證的對象。</p>
+      </div>
+    </div>
+
+    <p class="sub" style="margin-top:1.3rem;">
+      以上四項<span class="accent">皆為規劃中</span>，目前尚未實作。列在這裡是為了讓你知道我們往哪裡走，
+      不是為了讓你現在買。
+    </p>
+
+    <div class="notes">
+      <b>講者備忘</b>
+      「規劃中」三個字一定要念出來，而且要念清楚。絕對不能讓客戶以為這四項現在就有——
+      尤其是「文件問答」，那是最多人以為已經有的功能。
+      整份簡報的信任是靠誠實建立的，在最後一頁毀掉它非常不划算。
+      如果客戶對其中一項特別有興趣，記下來——那是產品優先順序的真實訊號。
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 24 · 結尾 ══════════════ -->
+<section class="slide" data-num="24 / 24">
+  <div class="slide-inner center">
+    <div class="brand-mark" style="margin:0 auto 1.6rem;" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="智閱引擎">
+        <defs>
+          <linearGradient id="dm2-bg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#3d1520"/><stop offset="0.55" stop-color="#240d14"/><stop offset="1" stop-color="#16080c"/>
+          </linearGradient>
+          <radialGradient id="dm2-glow" cx="0.2" cy="0.16" r="0.78">
+            <stop offset="0" stop-color="#fb7185" stop-opacity="0.30"/><stop offset="1" stop-color="#fb7185" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="dm2-glow2" cx="0.88" cy="0.86" r="0.6">
+            <stop offset="0" stop-color="#e11d48" stop-opacity="0.26"/><stop offset="1" stop-color="#e11d48" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="dm2-page" x1="0" y1="0" x2="0.6" y2="1">
+            <stop offset="0" stop-color="#ffeef2"/><stop offset="1" stop-color="#ffc9d6"/>
+          </linearGradient>
+          <linearGradient id="dm2-beam" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#ffffff" stop-opacity="0.03"/><stop offset="0.46" stop-color="#ffe4e9" stop-opacity="0.26"/><stop offset="1" stop-color="#ffffff" stop-opacity="0.03"/>
+          </linearGradient>
+          <linearGradient id="dm2-core" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#ffffff" stop-opacity="0.12"/><stop offset="0.46" stop-color="#ffffff" stop-opacity="0.92"/><stop offset="1" stop-color="#ffffff" stop-opacity="0.12"/>
+          </linearGradient>
+        </defs>
+        <rect width="512" height="512" fill="url(#dm2-bg)"/>
+        <rect width="512" height="512" fill="url(#dm2-glow)"/>
+        <rect width="512" height="512" fill="url(#dm2-glow2)"/>
+        <g transform="translate(256,256) scale(1.1) translate(-256,-256)">
+          <path d="M52 74a18 18 0 0 1 18-18h122l56 56v326a18 18 0 0 1-18 18H70a18 18 0 0 1-18-18z" fill="url(#dm2-page)"/>
+          <path d="M192 56l56 56h-46a10 10 0 0 1-10-10z" fill="#e11d48" fill-opacity="0.30"/>
+          <g fill="#e11d48">
+            <rect x="84" y="140" width="132" height="16" rx="8" fill-opacity="0.62"/>
+            <rect x="84" y="186" width="100" height="16" rx="8" fill-opacity="0.40"/>
+            <rect x="84" y="232" width="132" height="16" rx="8" fill-opacity="0.62"/>
+            <rect x="84" y="278" width="84" height="16" rx="8" fill-opacity="0.40"/>
+            <rect x="84" y="324" width="120" height="16" rx="8" fill-opacity="0.62"/>
+            <rect x="84" y="370" width="72" height="16" rx="8" fill-opacity="0.40"/>
+          </g>
+          <polygon points="278,-40 338,-40 250,552 190,552" fill="url(#dm2-beam)"/>
+          <polygon points="306,-40 318,-40 230,552 218,552" fill="url(#dm2-core)"/>
+          <g stroke="#fb7185" stroke-width="7" stroke-linecap="round" stroke-opacity="0.72" fill="none">
+            <line x1="352" y1="256" x2="438" y2="150"/>
+            <line x1="352" y1="256" x2="446" y2="262"/>
+            <line x1="352" y1="256" x2="438" y2="368"/>
+            <line x1="446" y1="262" x2="486" y2="200"/>
+            <line x1="446" y1="262" x2="486" y2="324"/>
+          </g>
+          <g>
+            <circle cx="352" cy="256" r="26" fill="#ffeef2"/>
+            <circle cx="352" cy="256" r="11" fill="#e11d48" fill-opacity="0.5"/>
+            <rect x="412" y="124" width="52" height="52" rx="14" fill="#fb7185"/>
+            <circle cx="446" cy="262" r="21" fill="#fda4af"/>
+            <rect x="412" y="342" width="52" height="52" rx="14" fill="#fb7185"/>
+            <circle cx="486" cy="200" r="17" fill="#fda4af" fill-opacity="0.9"/>
+            <circle cx="486" cy="324" r="17" fill="#fda4af" fill-opacity="0.9"/>
+          </g>
+        </g>
+      </svg>
+    </div>
+
+    <h2 style="font-size:clamp(1.5rem,4.2vw,3rem);">每一條結論，都告訴你出自第幾頁。</h2>
+    <div class="rule"></div>
+    <p class="lead">智閱引擎 DocInsight</p>
+
+    <p class="sub" style="margin-top:1.2rem;"><span class="badge">DocInsight 1.0.1</span></p>
+
+    <div class="notes">
+      <b>講者備忘</b>
+      這一頁在 Q&amp;A 期間會一直留在螢幕上，留在觀眾眼前的就是這句主張。
+      需要交換聯絡方式時當面談，簡報本身不放。
+    </div>
+  </div>
+</section>
+
+</div><!-- /deck -->
+
+<div class="hud">
+  <button class="hud-btn" id="btnPrev" type="button" aria-label="上一頁">←</button>
+  <button class="hud-btn" id="btnNext" type="button" aria-label="下一頁">→</button>
+  <button class="hud-btn" id="btnRead" type="button" aria-pressed="false">閱讀模式 R</button>
+  <button class="hud-btn" id="btnNotes" type="button" aria-pressed="false">講者備忘 S</button>
+  <span class="hud-spacer"></span>
+  <span class="counter" id="counter"><b>1</b> / 24</span>
+</div>
+
+<div class="hint" id="hint">
+  <kbd>←</kbd><kbd>→</kbd> 翻頁 &nbsp;·&nbsp;
+  <kbd>R</kbd> 閱讀模式 &nbsp;·&nbsp;
+  <kbd>S</kbd> 講者備忘 &nbsp;·&nbsp;
+  <kbd>F</kbd> 全螢幕
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  var slides   = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var total    = slides.length;
+  var counter  = document.getElementById('counter');
+  var progress = document.getElementById('progress');
+  var hint     = document.getElementById('hint');
+  var btnRead  = document.getElementById('btnRead');
+  var btnNotes = document.getElementById('btnNotes');
+  var current  = 0;
+  var typed    = '';   // 數字跳頁緩衝
+
+  // localStorage 在無痕視窗、縮圖擷取等情境會直接拋錯，一律包起來
+  function store(key, value){
+    try{
+      if(value === undefined) return window.localStorage.getItem(key);
+      window.localStorage.setItem(key, value);
+    }catch(e){ /* 讀不到就當作沒有，頁面照常運作 */ }
+    return null;
+  }
+
+  function isReading(){ return document.body.classList.contains('reading'); }
+
+  function show(index){
+    if(index < 0) index = 0;
+    if(index > total - 1) index = total - 1;
+    current = index;
+
+    if(!isReading()){
+      slides.forEach(function(s, i){ s.classList.toggle('is-active', i === index); });
+      slides[index].scrollTop = 0;
+    }
+    counter.innerHTML = '<b>' + (index + 1) + '</b> / ' + total;
+    progress.style.width = ((index + 1) / total * 100) + '%';
+    if(location.hash !== '#' + (index + 1)){
+      try{ history.replaceState(null, '', '#' + (index + 1)); }catch(e){}
+    }
+  }
+
+  function go(step){
+    if(isReading()){
+      var target = slides[Math.min(Math.max(current + step, 0), total - 1)];
+      target.scrollIntoView({behavior:'smooth', block:'start'});
+      current = slides.indexOf(target);
+      counter.innerHTML = '<b>' + (current + 1) + '</b> / ' + total;
+      return;
+    }
+    show(current + step);
+  }
+
+  function setReading(on){
+    document.body.classList.toggle('reading', on);
+    btnRead.setAttribute('aria-pressed', on ? 'true' : 'false');
+    store('docinsight-deck-reading', on ? '1' : '0');
+    if(on){
+      slides.forEach(function(s){ s.classList.remove('is-active'); });
+      slides[current].scrollIntoView({block:'start'});
+    }else{
+      show(current);
+      window.scrollTo(0, 0);
+    }
+  }
+
+  function setNotes(on){
+    document.body.classList.toggle('notes-on', on);
+    btnNotes.setAttribute('aria-pressed', on ? 'true' : 'false');
+    store('docinsight-deck-notes', on ? '1' : '0');
+  }
+
+  // ---- 鍵盤 ----
+  document.addEventListener('keydown', function(e){
+    if(e.metaKey || e.ctrlKey || e.altKey) return;
+    var k = e.key;
+
+    if(k === 'ArrowRight' || k === 'PageDown' || k === ' ' || k === 'Spacebar'){ e.preventDefault(); go(1); return; }
+    if(k === 'ArrowLeft'  || k === 'PageUp'){ e.preventDefault(); go(-1); return; }
+    if(k === 'Home'){ e.preventDefault(); jump(0); return; }
+    if(k === 'End'){ e.preventDefault(); jump(total - 1); return; }
+    if(k === 'r' || k === 'R'){ setReading(!isReading()); return; }
+    if(k === 's' || k === 'S'){ setNotes(!document.body.classList.contains('notes-on')); return; }
+    if(k === 'f' || k === 'F'){
+      try{
+        if(document.fullscreenElement) document.exitFullscreen();
+        else document.documentElement.requestFullscreen();
+      }catch(err){}
+      return;
+    }
+
+    // 輸入數字 + Enter 跳頁
+    if(k >= '0' && k <= '9'){ typed += k; return; }
+    if(k === 'Enter' && typed){
+      var n = parseInt(typed, 10);
+      typed = '';
+      if(n >= 1 && n <= total) jump(n - 1);
+      return;
+    }
+    typed = '';
+  });
+
+  function jump(index){
+    if(isReading()){
+      current = Math.min(Math.max(index, 0), total - 1);
+      slides[current].scrollIntoView({behavior:'smooth', block:'start'});
+      counter.innerHTML = '<b>' + (current + 1) + '</b> / ' + total;
+      return;
+    }
+    show(index);
+  }
+
+  // ---- 按鈕 ----
+  document.getElementById('btnPrev').addEventListener('click', function(){ go(-1); });
+  document.getElementById('btnNext').addEventListener('click', function(){ go(1); });
+  btnRead.addEventListener('click', function(){ setReading(!isReading()); });
+  btnNotes.addEventListener('click', function(){ setNotes(!document.body.classList.contains('notes-on')); });
+
+  // ---- 滾輪（投影片模式才攔截）----
+  var wheelLock = false;
+  window.addEventListener('wheel', function(e){
+    if(isReading() || wheelLock) return;
+    // 內容超出畫面時讓該頁自己捲，捲到底才翻頁
+    var s = slides[current];
+    var canScroll = s.scrollHeight > s.clientHeight + 4;
+    if(canScroll){
+      var atTop = s.scrollTop <= 0;
+      var atEnd = s.scrollTop + s.clientHeight >= s.scrollHeight - 4;
+      if((e.deltaY > 0 && !atEnd) || (e.deltaY < 0 && !atTop)) return;
+    }
+    if(Math.abs(e.deltaY) < 12) return;
+    wheelLock = true;
+    go(e.deltaY > 0 ? 1 : -1);
+    setTimeout(function(){ wheelLock = false; }, 480);
+  }, {passive:true});
+
+  // ---- 觸控左右滑 ----
+  var tx = 0, ty = 0;
+  window.addEventListener('touchstart', function(e){
+    tx = e.changedTouches[0].clientX;
+    ty = e.changedTouches[0].clientY;
+  }, {passive:true});
+  window.addEventListener('touchend', function(e){
+    if(isReading()) return;
+    var dx = e.changedTouches[0].clientX - tx;
+    var dy = e.changedTouches[0].clientY - ty;
+    if(Math.abs(dx) > 56 && Math.abs(dx) > Math.abs(dy) * 1.5) go(dx < 0 ? 1 : -1);
+  }, {passive:true});
+
+  // ---- 閱讀模式下捲動時更新頁碼 ----
+  window.addEventListener('scroll', function(){
+    if(!isReading()) return;
+    var mid = window.innerHeight * 0.35;
+    for(var i = 0; i < total; i++){
+      var r = slides[i].getBoundingClientRect();
+      if(r.top <= mid && r.bottom > mid){
+        if(current !== i){
+          current = i;
+          counter.innerHTML = '<b>' + (current + 1) + '</b> / ' + total;
+        }
+        break;
+      }
+    }
+  }, {passive:true});
+
+  // ---- 初始化 ----
+  if(store('docinsight-deck-notes') === '1') setNotes(true);
+
+  var start = parseInt((location.hash || '').replace('#', ''), 10);
+  show(isNaN(start) || start < 1 || start > total ? 0 : start - 1);
+
+  if(store('docinsight-deck-reading') === '1') setReading(true);
+
+  // 首次進入才顯示操作提示
+  if(store('docinsight-deck-hint') !== '1'){
+    hint.classList.add('show');
+    store('docinsight-deck-hint', '1');
+    setTimeout(function(){ hint.classList.remove('show'); }, 6000);
+  }
+})();
+</script>
+
+</body>
+</html>
